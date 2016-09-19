@@ -1,0 +1,14 @@
+<template bindable="errors">
+    <div class="alert alert-danger" tabindex="-1"
+         show.bind="errors.length"
+         focus.one-way="errors.length > 0">
+        <ul class="list-unstyled">
+            <li repeat.for="errorInfo of errors">
+                <span class="text-danger" style="color:white;">
+                    ${errorInfo.error.message}
+                  ${JSON.stringify(errorInfo.error)}
+                </span>
+            </li>
+        </ul>
+    </div>
+</template>

@@ -1,0 +1,13 @@
+<template>
+    <div class="task-list">
+        <ul class="list-group">
+            <li repeat.for="task of tasks" class="list-group-item ${task.id === $parent.selectedId ? 'active' : ''}">
+                <a route-href="route: tasks; params.bind: {id:task.id}" click.delegate="$parent.select(task)">
+                    <h4 class="list-group-item-heading">${task.name}</h4>
+                    <span class="list-group-item-text ">${task.due | dateFormat}</span>
+                    <p class="list-group-item-text">${task.isCompleted}</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</template>
