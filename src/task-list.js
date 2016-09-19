@@ -25,7 +25,7 @@ export class TaskList {
 
     select(task) {
         this.selectedId = task.id;
-      console.log(this)
+      console.log(this.selectedId);
         return true;
     }
 }

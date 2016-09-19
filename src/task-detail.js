@@ -53,6 +53,7 @@ export class TaskDetail {
         return true;
     }
 
+    // opens AddDialog
     addTask(task) {
         var original = this.utils.copyObj(task);
         this.dialogService.open({viewModel: AddTask, model: this.utils.copyObj(this.task)})

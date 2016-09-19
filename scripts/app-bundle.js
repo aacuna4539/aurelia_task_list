@@ -329,7 +329,7 @@ define('task-list',['exports', 'aurelia-event-aggregator', 'aurelia-framework', 
 
         TaskList.prototype.select = function select(task) {
             this.selectedId = task.id;
-            console.log(this);
+            console.log(this.selectedId);
             return true;
         };
 
