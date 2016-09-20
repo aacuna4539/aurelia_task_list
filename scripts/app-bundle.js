@@ -231,7 +231,7 @@ define('task-detail',['exports', 'aurelia-event-aggregator', 'aurelia-framework'
                 _this.task = task;
                 _this.routeConfig.navModel.setTitle(task.name);
                 _this.originalTask = _this.utils.copyObj(task);
-                _this.ea.publish(new _messages.TaskViewed(task));
+                _this.ea.publish(new _messages.TaskViewed(_this.task));
             });
         };
 
@@ -312,7 +312,7 @@ define('task-list',['exports', 'aurelia-event-aggregator', 'aurelia-framework', 
             ea.subscribe(_messages.TaskUpdated, function (x) {
                 var id = x.task.id;
                 var task = _this.tasks.find(function (x) {
-                    return x.id == id;
+                    return x.id === id;
                 });
                 console.log(task, x.task);
                 Object.assign(task, x.task);

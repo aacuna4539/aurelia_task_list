@@ -13,7 +13,7 @@ export class TaskList {
         ea.subscribe(TaskViewed, x => this.select(x.task));
         ea.subscribe(TaskUpdated, x => {
             let id = x.task.id;
-            let task = this.tasks.find(x => x.id == id);
+            let task = this.tasks.find(x => x.id === id);
           console.log(task, x.task);
             Object.assign(task, x.task);
         });

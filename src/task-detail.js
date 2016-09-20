@@ -23,7 +23,7 @@ export class TaskDetail {
             this.task = task;
             this.routeConfig.navModel.setTitle(task.name);
             this.originalTask = this.utils.copyObj(task);
-            this.ea.publish(new TaskViewed(task));
+            this.ea.publish(new TaskViewed(this.task));
         });
     }
 
