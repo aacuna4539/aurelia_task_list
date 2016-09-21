@@ -18,11 +18,11 @@ define('AddDialog',['exports', 'aurelia-validation', 'aurelia-framework', 'aurel
         function AddTask(api, validationController, DialogController) {
             _classCallCheck(this, AddTask);
 
-            this.api = api;
-            this.validationController = validationController;
-            console.log(this.validationController);
-            this.dialogController = DialogController;
             this.task = { name: '', description: '', due: '', isCompleted: false, urgency: '' };
+
+            this.validationController = validationController;
+            this.dialogController = DialogController;
+            this.api = api;
         }
 
         AddTask.prototype.attached = function attached() {
@@ -74,8 +74,6 @@ define('app',['exports', 'aurelia-framework', './web-api', 'aurelia-validation']
         };
 
         App.prototype.configureRouter = function configureRouter(config, router) {
-            config.options.pushState = true;
-            config.options.root = '/';
             config.title = 'Todo';
             config.map([{ route: '', moduleId: 'home', title: 'Home' }, { route: 'task/:id', moduleId: 'task-detail', name: 'tasks' }]);
 
@@ -320,17 +318,20 @@ define('task-list',['exports', 'aurelia-event-aggregator', 'aurelia-framework', 
         }
 
         TaskList.prototype.created = function created() {
+            this.getList();
+        };
+
+        TaskList.prototype.select = function select(task) {
+            this.selectedId = task.id;
+            return true;
+        };
+
+        TaskList.prototype.getList = function getList() {
             var _this2 = this;
 
             this.api.getList().then(function (x) {
                 return _this2.tasks = x;
             });
-        };
-
-        TaskList.prototype.select = function select(task) {
-            this.selectedId = task.id;
-            console.log(this.selectedId);
-            return true;
         };
 
         return TaskList;
@@ -358,27 +359,30 @@ define('utils',["exports"], function (exports) {
             return JSON.parse(JSON.stringify(obj));
         };
 
-        Utils.prototype.objEq = function objEq(obj1, obj2) {
-            return Object.keys(obj1).every(function (key) {
-                return obj2.hasOwnProperty(key) && obj1[key] === obj2[key];
+        Utils.prototype.objEq = function objEq(obj_1, obj_2) {
+            return Object.keys(obj_1).every(function (key) {
+                return obj_2.hasOwnProperty(key) && obj_1[key] === obj_2[key];
             });
         };
 
         return Utils;
     }();
 });
-define('web-api',['exports'], function (exports) {
+define('web-api',['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
+    exports.WebAPI = undefined;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
         }
     }
+
+    var _dec, _class;
 
     var delay = 200;
     var id = 0;
@@ -431,11 +435,15 @@ define('web-api',['exports'], function (exports) {
         urgency: '5'
     }];
 
-    var WebAPI = exports.WebAPI = function () {
-        function WebAPI() {
+    var WebAPI = exports.WebAPI = (_dec = (0, _aureliaFramework.inject)(_aureliaFramework.BindingEngine), _dec(_class = function () {
+        function WebAPI(bindingEngine) {
             _classCallCheck(this, WebAPI);
 
+            this.bindingEngine = bindingEngine;
             this.isRequesting = false;
+            this.list = list;
+
+            var subscription = this.bindingEngine.collectionObserver(this.list).subscribe(this.listChanged);
         }
 
         WebAPI.prototype.getList = function getList() {
@@ -444,17 +452,7 @@ define('web-api',['exports'], function (exports) {
             this.isRequesting = true;
             return new Promise(function (resolve) {
                 setTimeout(function () {
-                    var results = list.map(function (x) {
-                        return {
-                            id: x.id,
-                            name: x.name,
-                            description: x.description,
-                            due: x.due,
-                            isCompleted: x.isCompleted,
-                            urgency: x.urgency
-                        };
-                    });
-                    resolve(results);
+                    resolve(list);
                     _this.isRequesting = false;
                 }, delay);
             });
@@ -500,8 +498,12 @@ define('web-api',['exports'], function (exports) {
             });
         };
 
+        WebAPI.prototype.listChanged = function listChanged(splices) {
+            console.log(splices);
+        };
+
         return WebAPI;
-    }();
+    }()) || _class);
 });
 define('resources/bootstrap-form-validation-renderer',['exports', 'aurelia-framework', 'aurelia-validation'], function (exports, _aureliaFramework, _aureliaValidation) {
     'use strict';
@@ -588,17 +590,18 @@ define('resources/bootstrap-form-validation-renderer',['exports', 'aurelia-frame
     })(Element.prototype);
 });
 define('resources/index',['exports', './bootstrap-form-validation-renderer'], function (exports, _bootstrapFormValidationRenderer) {
-  'use strict';
+    'use strict';
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.configure = configure;
-  function configure(config) {
-    config.container.registerHandler('bootstrap-form', function (container) {
-      return container.get(_bootstrapFormValidationRenderer.BootstrapFormValidationRenderer);
+    Object.defineProperty(exports, "__esModule", {
+        value: true
     });
-  }
+    exports.configure = configure;
+    function configure(config) {
+        config.globalResources(['./elements/loading-indicator']);
+        config.container.registerHandler('bootstrap-form', function (container) {
+            return container.get(_bootstrapFormValidationRenderer.BootstrapFormValidationRenderer);
+        });
+    }
 });
 define('resources/attributes/DatePicker',['exports', 'aurelia-framework', 'bootstrap-datepicker'], function (exports, _aureliaFramework) {
     'use strict';
@@ -726,8 +729,7 @@ define('resources/value-converters/dateFormat',['exports', 'moment'], function (
             if (!format) {
                 format = 'M/DD/YYYY h:mm a';
             }
-            value = (0, _moment2.default)(value).format(format);
-            return value;
+            return (0, _moment2.default)(value).format(format);
         };
 
         DateFormatValueConverter.prototype.fromView = function fromView(value) {

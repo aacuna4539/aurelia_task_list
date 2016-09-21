@@ -59,7 +59,8 @@ export class BootstrapFormValidationRenderer {
 // Polyfill for Element.closest and Element.matches
 // https://github.com/jonathantneal/closest/
 (function (ELEMENT) {
-    ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector || ELEMENT.oMatchesSelector || ELEMENT.webkitMatchesSelector;
+    ELEMENT.matches = ELEMENT.matches || ELEMENT.mozMatchesSelector || ELEMENT.msMatchesSelector
+                                      || ELEMENT.oMatchesSelector   || ELEMENT.webkitMatchesSelector;
 
     ELEMENT.closest = ELEMENT.closest || function closest(selector) {
             var element = this;

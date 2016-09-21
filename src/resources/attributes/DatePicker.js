@@ -1,8 +1,8 @@
 /**
  * Created by rigel on 9/18/16.
  */
+import                                  'bootstrap-datepicker';
 import { inject, customAttribute } from 'aurelia-framework';
-import 'bootstrap-datepicker';
 
 @customAttribute('datepicker')
 @inject(Element)

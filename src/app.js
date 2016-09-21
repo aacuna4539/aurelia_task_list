@@ -10,11 +10,9 @@ export class App {
     }
 
     configureRouter(config, router) {
-        config.options.pushState = true;
-        config.options.root = '/';
         config.title = 'Todo';
         config.map([
-            {route: '', moduleId: 'home', title: 'Home'},
+            {route: '',         moduleId: 'home',        title: 'Home'},
             {route: 'task/:id', moduleId: 'task-detail', name: 'tasks'}
         ]);
 

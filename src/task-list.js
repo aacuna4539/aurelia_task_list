@@ -20,12 +20,15 @@ export class TaskList {
     }
 
     created() {
-        this.api.getList().then( x => this.tasks = x);
+        this.getList();
     }
 
     select(task) {
         this.selectedId = task.id;
-      console.log(this.selectedId);
         return true;
+    }
+
+    getList() {
+        this.api.getList().then( x => this.tasks = x);
     }
 }

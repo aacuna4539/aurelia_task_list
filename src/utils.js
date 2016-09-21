@@ -4,8 +4,8 @@ export class Utils {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    objEq(obj1, obj2) {
-        return Object.keys(obj1).every((key) => obj2.hasOwnProperty(key) && (obj1[key] === obj2[key]));
+    objEq(obj_1, obj_2) {
+        return Object.keys(obj_1).every((key) => obj_2.hasOwnProperty(key) && (obj_1[key] === obj_2[key]));
     };
 }
 

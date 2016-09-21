@@ -5,8 +5,8 @@ export class DateFormatValueConverter {
         if(!format) {
           format = 'M/DD/YYYY h:mm a';
         }
-        value = moment(value).format(format);
-        return value;
+        return moment(value).format(format);
+
     }
 
     fromView(value) {

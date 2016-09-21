@@ -1,3 +1,5 @@
+import { inject, BindingEngine } from 'aurelia-framework';
+
 let delay = 200;
 let id = 0;
 
@@ -56,24 +58,22 @@ let list = [
     }
 ];
 
+
+@inject(BindingEngine)
 export class WebAPI {
-    isRequesting = false;
+    constructor(bindingEngine) {
+        this.bindingEngine = bindingEngine;
+        this.isRequesting  = false;
+        this.list          = list;
+
+        let subscription = this.bindingEngine.collectionObserver(this.list).subscribe(this.listChanged);
+    }
 
     getList() {
         this.isRequesting = true;
         return new Promise(resolve => {
             setTimeout(() => {
-                let results = list.map(x => {
-                    return {
-                        id: x.id,
-                        name: x.name,
-                        description: x.description,
-                        due: x.due,
-                        isCompleted: x.isCompleted,
-                        urgency: x.urgency
-                    }
-                });
-                resolve(results);
+                resolve(list);
                 this.isRequesting = false;
             }, delay);
         });
@@ -109,5 +109,9 @@ export class WebAPI {
                 resolve(copy);
             }, delay);
         });
+    }
+
+    listChanged(splices) {
+        console.log(splices);
     }
 }

@@ -11,12 +11,11 @@ import { WebAPI }                                                 from 'web-api'
 export class AddTask {
 
     constructor(api, validationController, DialogController) {
-        this.api = api;
-        this.validationController = validationController;
-      console.log(this.validationController);
-        this.dialogController = DialogController;
-        this.task = { name: '', description: '', due: '', isCompleted: false, urgency: ''};
+        this.task = { name: '', description: '', due: '', isCompleted: false, urgency: '' };
 
+        this.validationController = validationController;
+        this.dialogController     = DialogController;
+        this.api                  = api;
     }
 
     attached() {
@@ -31,7 +30,7 @@ export class AddTask {
         let errors = this.validationController.validate();
         errors.then( errors => {
             if (errors.length === 0) {
-              this.api.saveTask(this.task); // then saved alert
+              this.api.saveTask(this.task);
               this.dialogController.ok();
             }
         });
