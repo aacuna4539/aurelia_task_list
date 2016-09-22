@@ -2,7 +2,7 @@
   <require from="resources/elements/validation-summary.html"></require>
       <ai-dialog class="panel panel-primary">
           <div class="panel-heading">
-            <h3 class="panel-title">Edit Task Profile</h3>
+            <h3 class="panel-title">Add Task Profile</h3>
           </div>
           <ai-dialog-body class="panel-body">
               <form role="form" class="form-horizontal" validation-renderer="bootstrap-form" validation-errors.bind="errors">
@@ -28,7 +28,9 @@
                   <div class="form-group">
                       <label class="col-sm-2 control-label">Due Date</label>
                       <div class="col-sm-10">
-                          <!--<input type="date" placeholder="due" class="form-control" value.bind="task.due | dateFormat & validate">-->
+                          <div class="input-group date">
+                              <input type="text" datepicker class="form-control" value.bind="task.due | dateFormat:'L'"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                          </div>
                       </div>
                   </div>
 
@@ -47,3 +49,6 @@
           </ai-dialog-footer>
     </ai-dialog>
 </template>
+
+
+

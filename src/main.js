@@ -14,7 +14,7 @@ export function configure(aurelia) {
     .developmentLogging()
     .plugin('aurelia-validation')
     .plugin('aurelia-dialog')
-    .globalResources('resources/value-converters/dateFormat')
+    .globalResources('resources/value-converters/dateFormat', 'resources/attributes/DatePicker')
     .feature('resources');
 
   if (environment.debug) {
@@ -27,3 +27,5 @@ export function configure(aurelia) {
 
   aurelia.start().then(() => aurelia.setRoot());
 }
+
+

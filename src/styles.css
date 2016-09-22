@@ -55,6 +55,7 @@ li.list-group-item.active > a {
 
 ai-dialog {
     min-width: 40vw;
+    max-width: 54vw;
 }
 
 ai-dialog-overlay {
