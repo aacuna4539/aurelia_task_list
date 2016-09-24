@@ -10,9 +10,9 @@ import { Utils }                         from './utils';
 export class TaskDetail {
 
     constructor(api, ea, utils, dialogService) {
-        this.api = api;
-        this.ea = ea;
-        this.utils = utils;
+        this.api           = api;
+        this.ea            = ea;
+        this.utils         = utils;
         this.dialogService = dialogService;
     }
 

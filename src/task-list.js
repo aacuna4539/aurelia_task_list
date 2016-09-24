@@ -7,7 +7,7 @@ import { WebAPI }                  from './web-api';
 export class TaskList {
 
     constructor(api, ea) {
-        this.api = api;
+        this.api   = api;
         this.tasks = [];
 
         ea.subscribe(TaskViewed, x => this.select(x.task));

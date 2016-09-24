@@ -365,6 +365,12 @@ define('utils',["exports"], function (exports) {
             });
         };
 
+        Utils.prototype.composeThree = function composeThree(fn1, fn2, fn3) {
+            return function (x) {
+                return fn1(fn2(x), fn3(x));
+            };
+        };
+
         return Utils;
     }();
 });
