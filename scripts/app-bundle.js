@@ -304,16 +304,15 @@ define('task-list',['exports', 'aurelia-event-aggregator', 'aurelia-framework', 
             this.api = api;
             this.tasks = [];
 
-            ea.subscribe(_messages.TaskViewed, function (x) {
-                return _this.select(x.task);
+            ea.subscribe(_messages.TaskViewed, function (msg) {
+                return _this.select(msg.task);
             });
-            ea.subscribe(_messages.TaskUpdated, function (x) {
-                var id = x.task.id;
+            ea.subscribe(_messages.TaskUpdated, function (msg) {
+                var id = msg.task.id;
                 var task = _this.tasks.find(function (x) {
-                    return x.id === id;
+                    return x.id == id;
                 });
-                console.log(task, x.task);
-                Object.assign(task, x.task);
+                Object.assign(task, msg.task);
             });
         }
 
@@ -448,7 +447,6 @@ define('web-api',['exports', 'aurelia-framework'], function (exports, _aureliaFr
             this.bindingEngine = bindingEngine;
             this.isRequesting = false;
             this.list = list;
-
             var subscription = this.bindingEngine.collectionObserver(this.list).subscribe(this.listChanged);
         }
 
@@ -458,7 +456,17 @@ define('web-api',['exports', 'aurelia-framework'], function (exports, _aureliaFr
             this.isRequesting = true;
             return new Promise(function (resolve) {
                 setTimeout(function () {
-                    resolve(list);
+                    _this.list = _this.list.map(function (x) {
+                        return {
+                            id: x.id,
+                            name: x.name,
+                            description: x.description,
+                            due: x.due,
+                            isCompleted: false,
+                            urgency: ''
+                        };
+                    });
+                    resolve(_this.list);
                     _this.isRequesting = false;
                 }, delay);
             });
@@ -470,7 +478,7 @@ define('web-api',['exports', 'aurelia-framework'], function (exports, _aureliaFr
             this.isRequesting = true;
             return new Promise(function (resolve) {
                 setTimeout(function () {
-                    var found = list.filter(function (x) {
+                    var found = _this2.list.filter(function (x) {
                         return x.id == id;
                     })[0];
                     resolve(JSON.parse(JSON.stringify(found)));
@@ -625,7 +633,7 @@ define('resources/attributes/DatePicker',['exports', 'aurelia-framework', 'boots
 
     var _dec, _dec2, _class;
 
-    var DatePicker = exports.DatePicker = (_dec = (0, _aureliaFramework.customAttribute)('datepicker'), _dec2 = (0, _aureliaFramework.inject)(Element), _dec(_class = _dec2(_class = function () {
+    var DatePicker = exports.DatePicker = (_dec = (0, _aureliaFramework.customAttribute)('datepicker'), _dec2 = (0, _aureliaFramework.inject)(_aureliaFramework.DOM.Element), _dec(_class = _dec2(_class = function () {
         function DatePicker(element) {
             _classCallCheck(this, DatePicker);
 
@@ -2792,11 +2800,11 @@ define('aurelia-dialog/dialog-service',['exports', 'aurelia-metadata', 'aurelia-
     return Promise.resolve(instruction);
   }
 });
-define('text!AddDialog.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"resources/elements/validation-summary.html\"></require>\n      <ai-dialog class=\"panel panel-primary\">\n          <div class=\"panel-heading\">\n            <h3 class=\"panel-title\">Add Task Profile</h3>\n          </div>\n          <ai-dialog-body class=\"panel-body\">\n              <form role=\"form\" class=\"form-horizontal\" validation-renderer=\"bootstrap-form\" validation-errors.bind=\"errors\">\n\n                <validation-summary errors.bind=\"errors\"\n                                    autofocus.bind=\"validationController.validateTrigger === 'manual'\">\n                </validation-summary>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Name</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"text\" placeholder=\"name\" class=\"form-control\" value.bind=\"task.name & validate\">\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Description</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"text\" placeholder=\"description\" class=\"form-control\" value.bind=\"task.description & validate\">\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Due Date</label>\n                      <div class=\"col-sm-10\">\n                          <div class=\"input-group date\">\n                              <input type=\"text\" datepicker class=\"form-control\" value.bind=\"task.due | dateFormat:'L'\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-th\"></i></span>\n                          </div>\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Urgency</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"range\" min=\"1\" max=\"5\" step=\"1\" class=\"form-control\" value.bind=\"task.urgency & validate\">\n                      </div>\n                  </div>\n              </form>\n          </ai-dialog-body>\n\n          <ai-dialog-footer>\n              <button click.trigger=\"cancel()\">Cancel</button>\n              <button click.trigger=\"save(task)\">Ok</button>\n          </ai-dialog-footer>\n    </ai-dialog>\n</template>\n\n\n\n"; });
+define('text!AddDialog.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"resources/elements/validation-summary.html\"></require>\n      <ai-dialog class=\"panel panel-primary\">\n          <div class=\"panel-heading\">\n            <h3 class=\"panel-title\">Add Task Profile</h3>\n          </div>\n          <ai-dialog-body class=\"panel-body\">\n              <form role=\"form\" class=\"form-horizontal\" validation-renderer=\"bootstrap-form\" validation-errors.bind=\"errors\">\n\n                <validation-summary errors.bind=\"errors\"\n                                    autofocus.bind=\"validationController.validateTrigger === 'manual'\">\n                </validation-summary>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Name</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"text\" placeholder=\"name\" class=\"form-control\" value.bind=\"task.name & validate\">\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Description</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"text\" placeholder=\"description\" class=\"form-control\" value.bind=\"task.description & validate\">\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Due Date</label>\n                      <div class=\"col-sm-10\">\n                          <div class=\"input-group date\">\n                              <input type=\"text\" datepicker class=\"form-control\" value.bind=\"task.due | dateFormat:'L'\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-th\"></i></span>\n                          </div>\n                      </div>\n                  </div>\n\n                  <div class=\"form-group\">\n                      <label class=\"col-sm-2 control-label\">Urgency</label>\n                      <div class=\"col-sm-10\">\n                          <input type=\"range\" min=\"1\" max=\"5\" step=\"1\" class=\"form-control\" value.bind=\"task.urgency & validate\">\n                      </div>\n                  </div>\n              </form>\n          </ai-dialog-body>\n\n          <ai-dialog-footer>\n              <button click.delegate=\"cancel()\">Cancel</button>\n              <button click.delegate=\"save(task)\">Ok</button>\n          </ai-dialog-footer>\n    </ai-dialog>\n</template>\n\n\n\n"; });
 define('text!styles.css', ['module'], function(module) { module.exports = "/*@import url(\"//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css\");*/\n\nbody { padding-top: 70px; }\n\nsection {\n    margin: 0 20px;\n}\n\na:focus {\n    outline: none;\n}\n\n.navbar-nav li.loader {\n    margin: 12px 24px 0 6px;\n}\n\n.no-selection {\n    margin: 20px;\n}\n\n.task-list {\n    overflow-y: auto;\n    border: 1px solid #ddd;\n    padding: 10px;\n}\n\n.panel {\n    margin: 20px;\n}\n\n.button-bar {\n    right: 0;\n    left: 0;\n    bottom: 0;\n    border-top: 1px solid #ddd;\n    background: white;\n}\n\n.button-bar > button {\n    float: right;\n    margin: 20px;\n}\n\nli.list-group-item {\n    list-style: none;\n}\n\nli.list-group-item > a {\n    text-decoration: none;\n}\n\nli.list-group-item.active > a {\n    color: white;\n}\n\nai-dialog {\n    min-width: 40vw;\n    max-width: 54vw;\n}\n\nai-dialog-overlay {\n    background: rgba(1,10,10, .9);\n}\n"; });
 define('text!app.html', ['module'], function(module) { module.exports = "<template>\n  <require from=\"bootstrap/css/bootstrap.css\"></require>\n  <require from=\"./styles.css\"></require>\n  <require from=\"./task-list\"></require>\n\n  <nav class=\"navbar navbar-default navbar-fixed-top\" role=\"navigation\">\n    <div class=\"navbar-header\">\n      <a class=\"navbar-brand\" href=\"#\">\n        <i class=\"fa fa-user\"></i>\n        <span>Tasks</span>\n      </a>\n    </div>\n  </nav>\n\n  <loading-indicator loading.bind=\"router.isNavigating || api.isRequesting\"></loading-indicator>\n\n  <div class=\"container\">\n    <div class=\"row\">\n      <task-list class=\"col-md-4\"></task-list>\n      <router-view class=\"col-md-8\"></router-view>\n    </div>\n  </div>\n</template>\n"; });
 define('text!home.html', ['module'], function(module) { module.exports = "<template>\n    <div class=\"no-selection text-center\">\n        <h2>${welcomeMessage}</h2>\n    </div>\n</template>"; });
 define('text!task-detail.html', ['module'], function(module) { module.exports = "<template>\n    <div class=\"panel panel-primary\">\n        <div class=\"panel-heading\">\n          <h3 class=\"panel-title\">Edit Task Profile</h3>\n        </div>\n        <div class=\"panel-body\">\n            <form role=\"form\" class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label class=\"col-sm-2 control-label\">Name</label>\n                    <div class=\"col-sm-10\">\n                        <input type=\"text\" placeholder=\"name\" class=\"form-control\" value.bind=\"task.name\">\n                    </div>\n                </div>\n\n                <div class=\"form-group\">\n                    <label class=\"col-sm-2 control-label\">Description</label>\n                    <div class=\"col-sm-10\">\n                        <input type=\"text\" placeholder=\"description\" class=\"form-control\" value.bind=\"task.description\">\n                    </div>\n                </div>\n\n                <div class=\"form-group\">\n                    <label class=\"col-sm-2 control-label\">Due Date</label>\n                    <div class=\"col-sm-10\">\n                      <div class=\"input-group date\">\n                        <input type=\"text\" datepicker class=\"form-control\" value.bind=\"task.due | dateFormat:'L'\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-th\"></i></span>\n                      </div>\n                    </div>\n                </div>\n\n                <div class=\"form-group\">\n                    <label class=\"col-sm-2 control-label\">Urgency</label>\n                    <div class=\"col-sm-10\">\n                        <input type=\"range\" min=\"1\" max=\"5\" step=\"1\" class=\"form-control\" value.bind=\"task.urgency\">\n                    </div>\n                </div>\n            </form>\n        </div>\n    </div>\n\n    <div class=\"button-bar\">\n        <button class=\"btn btn-info\" click.delegate=\"addTask(task)\" >Add New</button>\n        <button class=\"btn btn-success\" click.delegate=\"save()\" disabled.bind=\"!canSave\">Save Edit</button>\n    </div>\n\n</template>\n"; });
-define('text!task-list.html', ['module'], function(module) { module.exports = "<template>\n    <div class=\"task-list\">\n        <ul class=\"list-group\">\n            <li repeat.for=\"task of tasks\" class=\"list-group-item ${task.id === $parent.selectedId ? 'active' : ''}\">\n                <a route-href=\"route: tasks; params.bind: {id:task.id}\" click.delegate=\"$parent.select(task)\">\n                    <h4 class=\"list-group-item-heading\">${task.name}</h4>\n                    <span class=\"list-group-item-text \">${task.due | dateFormat}</span>\n                    <p class=\"list-group-item-text\">${task.isCompleted}</p>\n                </a>\n            </li>\n        </ul>\n    </div>\n</template>\n"; });
+define('text!task-list.html', ['module'], function(module) { module.exports = "<template>\n    <div class=\"task-list\">\n        <ul class=\"list-group\">\n            <li repeat.for=\"task of tasks\" class=\"list-group-item ${task.id === $parent.selectedId ? 'active' : ''}\">\n                <a route-href=\"route: tasks; params.bind: {id:task.id}\" click.delegate=\"$parent.select(task)\">\n                    <h4 class=\"list-group-item-heading\">${task.name}</h4>\n                    <span class=\"list-group-item-text \">${task.due | dateFormat}</span>\n                    <p class=\"list-group-item-text\">${task.isCompleted}</p>\n                    <p class=\"list-group-item-text\">${task.urgency}</p>\n                </a>\n            </li>\n        </ul>\n    </div>\n</template>\n"; });
 define('text!resources/elements/validation-summary.html', ['module'], function(module) { module.exports = "<template bindable=\"errors\">\n    <div class=\"alert alert-danger\" tabindex=\"-1\"\n         show.bind=\"errors.length\"\n         focus.one-way=\"errors.length > 0\">\n        <ul class=\"list-unstyled\">\n            <li repeat.for=\"errorInfo of errors\">\n                <span class=\"text-danger\" style=\"color:white;\">\n                    ${errorInfo.error.message}\n                  ${JSON.stringify(errorInfo.error)}\n                </span>\n            </li>\n        </ul>\n    </div>\n</template>\n"; });
 //# sourceMappingURL=app-bundle.js.map

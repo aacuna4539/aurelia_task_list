@@ -10,12 +10,11 @@ export class TaskList {
         this.api   = api;
         this.tasks = [];
 
-        ea.subscribe(TaskViewed, x => this.select(x.task));
-        ea.subscribe(TaskUpdated, x => {
-            let id = x.task.id;
-            let task = this.tasks.find(x => x.id === id);
-          console.log(task, x.task);
-            Object.assign(task, x.task);
+        ea.subscribe(TaskViewed, msg => this.select(msg.task));
+        ea.subscribe(TaskUpdated, msg => {
+            let id = msg.task.id;
+            let task = this.tasks.find(x => x.id == id);
+            Object.assign(task, msg.task);
         });
     }
 

@@ -1,7 +1,7 @@
 /**
  * Created by rigel on 9/18/16.
  */
-import { ValidationController, validateTrigger, ValidationRules } from 'aurelia-validation';
+import { ValidationController, ValidationRules }                  from 'aurelia-validation';
 import { inject, NewInstance }                                    from 'aurelia-framework';
 import { DialogController }                                       from 'aurelia-dialog';
 import { WebAPI }                                                 from 'web-api';
@@ -11,7 +11,7 @@ import { WebAPI }                                                 from 'web-api'
 export class AddTask {
 
     constructor(api, validationController, DialogController) {
-        this.task = { name: '', description: '', due: '', isCompleted: false, urgency: '' };
+        this.task = {name: '', description: '', due: '', isCompleted: false, urgency: ''};
 
         this.validationController = validationController;
         this.dialogController     = DialogController;
@@ -28,10 +28,10 @@ export class AddTask {
 
     save() {
         let errors = this.validationController.validate();
-        errors.then( errors => {
+        errors.then(errors => {
             if (errors.length === 0) {
-              this.api.saveTask(this.task);
-              this.dialogController.ok();
+                this.api.saveTask(this.task);
+                this.dialogController.ok();
             }
         });
     }
@@ -40,6 +40,9 @@ export class AddTask {
         this.dialogController.cancel();
     }
 }
+
+
+
 
 
 
