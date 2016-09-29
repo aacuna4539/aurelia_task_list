@@ -17,6 +17,8 @@ export class TaskDetail {
     }
 
     activate(params, routeConfig) {
+        console.log('task: ', this.task)
+        console.log('oTask: ', this.originalTask)
         this.routeConfig = routeConfig;
 
         return this.api.getTaskDetails(params.id).then(task => {
@@ -24,6 +26,7 @@ export class TaskDetail {
             this.routeConfig.navModel.setTitle(task.name);
             this.originalTask = this.utils.copyObj(task);
             this.ea.publish(new TaskViewed(this.task));
+
         });
     }
 
@@ -42,6 +45,8 @@ export class TaskDetail {
     }
 
     canDeactivate() {
+        console.log('Deact task: ', this.task)
+        console.log('Deact oTask: ', this.originalTask)
         if (!this.utils.objEq(this.originalTask, this.task)) {
             let result = confirm('You have unsaved changes. Are you sure you wish to leave?');
 

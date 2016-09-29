@@ -31,7 +31,11 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Urgency</label>
                     <div class="col-sm-10">
-                        <input type="range" min="1" max="5" step="1" class="form-control" value.bind="task.urgency">
+                        <div id="slider">
+                            <input type="range" min="1" max="10" step="1" class="bar" ref="urgency" id="rangeinput" value.bind="task.urgency">
+                            <span class="highlight"></span>
+                            <output id="rangevalue">${urgency.value}</output>
+                        </div>
                     </div>
                 </div>
             </form>

@@ -79,7 +79,7 @@ export class WebAPI {
                         description: x.description,
                         due: x.due,
                         isCompleted: false,
-                        urgency: ''
+                        urgency: x.urgency
                     }
                 });
                 resolve(this.list);
